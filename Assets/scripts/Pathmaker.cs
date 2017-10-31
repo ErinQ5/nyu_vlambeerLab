@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 // MAZE PROC GEN LAB
 // all students: complete steps 1-6, as listed in this file
 // optional: if you have extra time, complete the "extra tasks" to do at the very bottom
@@ -13,6 +13,16 @@ public class Pathmaker : MonoBehaviour {
 
 // STEP 2: ============================================================================================
 // translate the pseudocode below
+	public float myCounter = 0;
+	public Transform floorPrefab;
+	public Transform pathmakerSpherePrefab;
+
+	List<GameObject> floorTypeList = new List<GameObject>();
+	public GameObject floorType1;
+	public GameObject floorType2;
+	public GameObject floorType3;
+
+	private GameObject curG;
 
 //	DECLARE CLASS MEMBER VARIABLES:
 //	Declare a private integer called counter that starts at 0; 		// counter var will track how many floor tiles I've instantiated
@@ -21,24 +31,62 @@ public class Pathmaker : MonoBehaviour {
 
 
 	void Update () {
+		if(Input.GetKeyDown(KeyCode.R)){
+			Scene scene = SceneManager.GetActiveScene();
+			SceneManager.LoadScene(scene.name);
+		}
+
+			if (myCounter < 500) {
+				float radNum = Random.Range (0.0f, 1.0f);
+				if (radNum < 0.25f) {
+					transform.Rotate (0, 90, 0);
+				} else if (radNum > 0.25f || radNum < 0.5f) {
+					transform.Rotate (0, -90, 0);
+				} else if (radNum > 0.99f || radNum < 1.0f) {
+					Instantiate (pathmakerSpherePrefab, transform.position, transform.rotation);
+				}
+				//Instantiate (floorPrefab, transform.position, transform.rotation);
+
+				//transform.position.z += 5f;
+
+
+
+				//randomize floortypes
+				float floorTypeRad = Random.Range (0.1f, 1.0f);//0 to 1, 0.25, 0.5, 0.75
+				if (floorTypeRad < 0.25f) {
+					curG = Instantiate (floorType1, transform.position, Quaternion.identity);
+				} else if (floorTypeRad < 0.5f) {
+					curG = Instantiate (floorType2, transform.position, Quaternion.identity);
+				} else if (floorTypeRad < 0.75f) {
+					curG = Instantiate (floorType3, transform.position, Quaternion.identity);
+				} else {
+					//curG = (gameObject)Instantiate (floorPrefab, transform.position, transform.rotation);  
+					curG = Instantiate (floorPrefab, transform.position, transform.rotation).gameObject;
+				}
+
+				floorTypeList.Add (curG);
+				transform.position += transform.forward * 5f;
+				myCounter++;
+			} else {
+				Destroy (transform.gameObject);
+			}
+		}
+	
+		
 //		If counter is less than 50, then:
-//		Generate a random number from 0.0f to 1.0f;
-//		If random number is less than 0.25f, then rotate myself 90 degrees;
-//			... Else if number is 0.25f-0.5f, then rotate myself -90 degrees;
-//			... Else if number is 0.99f-1.0f, then instantiate a pathmakerSpherePrefab clone at my current position;
+//			Generate a random number from 0.0f to 1.0f;
+//			If random number is less than 0.25f, then rotate myself 90 degrees;
+//				... Else if number is 0.25f-0.5f, then rotate myself -90 degrees;
+//				... Else if number is 0.99f-1.0f, then instantiate a pathmakerSpherePrefab clone at my current position;
 //		// end elseIf
 
-//		Instantiate a floorPrefab clone at current position;
+//			Instantiate a floorPrefab clone at current position;
 
-//		Move forward ("forward" in local space, relative to the direction I'm facing) by 5 units;
+//			Move forward ("forward" in local space, relative to the direction I'm facing) by 5 units;
 //			Increment counter;
-//			Else:
+//		Else:
 //			Destroy my game object; 		// self destruct if I've made enough tiles already
 	}
-
-} // end of class scope
-
-// MORE STEPS BELOW!!!........
 
 
 
